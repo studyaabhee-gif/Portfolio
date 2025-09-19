@@ -177,7 +177,6 @@ function Projects() {
   const [activeFilter, setActiveFilter] = useState('All');
   
   const projects = [
-   
     {
       id: 2,
       title: 'Portfolio Website',
@@ -188,6 +187,28 @@ function Projects() {
       image: '/website.png',
       github: 'https://github.com/abheejan/Portfolio-Project',
       live: 'http://abheejanlalshrestha.com.np/',
+    },
+    {
+      id: 3,
+      title: 'Modern Chess Web App',
+      description: 'A full-featured chess platform for casual players and enthusiasts, built with React and Firebase.',
+      detailedDescription: '♟️ Play against a smart bot or challenge friends online. Clean, modern profile page with editable user info and chess stats. Achievements, recent games, and real-time statistics. Responsive design for a seamless experience on any device. Built with React, Material-UI, and Firebase for fast, reliable performance.',
+      tags: ['React', 'Firebase', 'Material-UI', 'Web App', 'Chess'],
+      category: 'Full Stack',
+      image: '/chess-app.png', // Place your chess app image in the public folder as chess-app.png
+      github: 'https://github.com/abheejan/chess-game',
+      live: 'https://chess-app-20717.web.app/',
+    },
+    {
+      id: 4,
+      title: 'Image Super Resolution',
+      description: 'An IPPR (Image Processing and Pattern Recognition) project for enhancing image quality using advanced algorithms.',
+      detailedDescription: '🖼️ Advanced image super-resolution application built with React. Utilizes cutting-edge image processing algorithms to enhance image quality and resolution. Features modern UI with real-time processing capabilities and before/after comparisons. Perfect for photographers, designers, and anyone looking to improve image quality.',
+      tags: ['React', 'Image Processing', 'Computer Vision', 'IPPR', 'JavaScript'],
+      category: 'Full Stack',
+      image: '/image-super-resolution.png', // You'll need to add this image to your public folder
+      github: 'https://github.com/abheejan/image-super-resolution',
+      live: 'https://ai-image-enhancer-abheejan.netlify.app/',
     },
   ];
 
