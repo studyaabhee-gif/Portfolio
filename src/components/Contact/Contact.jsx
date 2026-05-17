@@ -106,10 +106,15 @@ function Contact() {
   const form = useRef();
 
   const onSubmit = (data) => {
+    const templateParams = {
+      ...data,
+      to_email: 'abheejanlal@gmail.com'
+    };
+
     emailjs.send(
       'service_m6r29e8',
       'template_qovcriv',
-      data,
+      templateParams,
       '9-pjF8yDJMKh5GWBX'
     )
     .then((response) => {
