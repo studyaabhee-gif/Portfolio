@@ -1,0 +1,54 @@
+# Set proper MIME types for JavaScript modules
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+    AddType text/css .css
+    AddType image/svg+xml .svg
+    AddType image/png .png
+    AddType image/jpeg .jpg
+    AddType image/jpeg .jpeg
+    AddType image/gif .gif
+    AddType image/webp .webp
+</IfModule>
+
+# Block access to source files
+<FilesMatch "\.(jsx|tsx|ts)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Enable CORS for assets
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|webp)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Content-Type "application/javascript" env=JS
+        Header set Content-Type "text/css" env=CSS
+    </FilesMatch>
+</IfModule>
+
+# Handle client-side routing
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Redirect JSX files to 404
+    RewriteRule \.jsx$ - [F,L]
+    RewriteRule \.tsx$ - [F,L]
+    
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+# Cache static assets
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule> 
