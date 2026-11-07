@@ -36,6 +36,9 @@ function ApiConsole() {
   return (
     <div className="console">
       <div className="console__bar">
+        <i aria-hidden="true" />
+        <i aria-hidden="true" />
+        <i aria-hidden="true" />
         <span className="console__method">GET</span>
         <span className="console__path">{endpoint.path}</span>
         <span className="console__status">200 OK</span>

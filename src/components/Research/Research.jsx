@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiCheck, FiCopy, FiExternalLink } from 'react-icons/fi';
+import { FiAward, FiCheck, FiCopy, FiExternalLink } from 'react-icons/fi';
 import { paper, profile } from '../../data/profile';
 
 function Research() {
@@ -16,18 +16,39 @@ function Research() {
   };
 
   return (
-    <section className="section section--alt" id="research">
-      <div className="container">
-        <header className="section-head reveal">
-          <p className="eyebrow">Research</p>
-          <h2>Published work</h2>
-        </header>
+    <section className="section section--tint" id="research">
+      <div className="container research">
+        <div className="sheet reveal" aria-hidden="true">
+          <div className="sheet__back" />
+          <div className="sheet__page">
+            <p>ICICSET · Vol. 3</p>
+            <strong>{paper.title}</strong>
+            <em>{paper.authors[0]} et al.</em>
+            <b className="w100" />
+            <b className="w90" />
+            <b className="w100" />
+            <b className="w70" />
+            <div className="sheet__chart">
+              <i style={{ height: '48%' }} />
+              <i style={{ height: '62%' }} />
+              <i style={{ height: '58%' }} />
+              <i style={{ height: '86%' }} />
+            </div>
+            <b className="w100" />
+            <b className="w60" />
+          </div>
+          <span className="sheet__seal">
+            <FiAward /> Published
+          </span>
+        </div>
 
-        <article className="paper reveal">
+        <div className="reveal">
+          <p className="pill">Research</p>
+          <h2>Published work</h2>
           <p className="paper__meta">
-            {paper.date} <span aria-hidden="true">/</span> {paper.volume}
+            {paper.date} <span aria-hidden="true">·</span> {paper.volume}
           </p>
-          <h3>{paper.title}</h3>
+          <h3 className="paper__title">{paper.title}</h3>
           <p className="paper__authors">
             {paper.authors.map((author, index) => (
               <span key={author}>
@@ -42,14 +63,14 @@ function Research() {
           <p>{paper.summary}</p>
           <div className="btn-row">
             <a className="btn btn--primary" href={paper.url} target="_blank" rel="noreferrer">
-              <FiExternalLink aria-hidden="true" /> DOI: {paper.doi}
+              <FiExternalLink aria-hidden="true" /> Read the paper
             </a>
             <button type="button" className="btn" onClick={copyCitation}>
               {copied ? <FiCheck aria-hidden="true" /> : <FiCopy aria-hidden="true" />}
               <span aria-live="polite">{copied ? 'Citation copied' : 'Copy citation'}</span>
             </button>
           </div>
-        </article>
+        </div>
       </div>
     </section>
   );

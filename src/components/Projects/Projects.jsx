@@ -1,4 +1,5 @@
 import { FiExternalLink, FiGithub } from 'react-icons/fi';
+import { SiFlutter, SiGo } from 'react-icons/si';
 import { projects } from '../../data/profile';
 
 function Projects() {
@@ -6,21 +7,24 @@ function Projects() {
     <section className="section" id="projects">
       <div className="container">
         <header className="section-head reveal">
-          <p className="eyebrow">More projects</p>
+          <p className="pill">More projects</p>
           <h2>Other things I&apos;ve built</h2>
         </header>
 
         <div className="project-grid">
-          {projects.map((project) => (
-            <article className="project reveal" key={project.title}>
-              {project.image ? (
-                <img src={project.image} alt={`${project.title} screenshot`} loading="lazy" />
-              ) : (
-                <div className="project__code" aria-hidden="true">
-                  <code>go run .</code>
-                  <code>flutter build web</code>
-                </div>
-              )}
+          {projects.map((project, index) => (
+            <article className="project reveal" style={{ '--d': `${index * 90}ms` }} key={project.title}>
+              <div className="project__media">
+                {project.image ? (
+                  <img src={project.image} alt={`${project.title} screenshot`} loading="lazy" />
+                ) : (
+                  <div className="project__art" aria-hidden="true">
+                    <SiGo style={{ color: '#00ADD8' }} />
+                    <span>+</span>
+                    <SiFlutter style={{ color: '#02569B' }} />
+                  </div>
+                )}
+              </div>
               <div className="project__body">
                 <h3>{project.title}</h3>
                 <p>{project.description}</p>

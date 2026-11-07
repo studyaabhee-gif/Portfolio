@@ -4,7 +4,6 @@ import emailjs from 'emailjs-com';
 import {
   FiCheck,
   FiCopy,
-  FiDownload,
   FiGithub,
   FiLinkedin,
   FiMail,
@@ -14,14 +13,22 @@ import {
 } from 'react-icons/fi';
 import { links, profile } from '../../data/profile';
 
+function mailtoLink({ name = '', email = '', message = '' }) {
+  const subject = encodeURIComponent(`Portfolio message from ${name}`);
+  const body = encodeURIComponent(`${message}\n\nFrom: ${name} <${email}>`);
+  return `mailto:${profile.email}?subject=${subject}&body=${body}`;
+}
+
 function Contact() {
   const {
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm();
   const [status, setStatus] = useState(null);
+  const [fallback, setFallback] = useState('');
   const [copied, setCopied] = useState(false);
 
   const copyEmail = async () => {
@@ -37,31 +44,45 @@ function Contact() {
   const onSubmit = async (data) => {
     setStatus(null);
     try {
+      // The field names cover the common EmailJS template variables, so no template renders blank.
       await emailjs.send(
         'service_m6r29e8',
         'template_qovcriv',
-        { ...data, to_email: profile.email },
+        {
+          name: data.name,
+          from_name: data.name,
+          user_name: data.name,
+          email: data.email,
+          from_email: data.email,
+          user_email: data.email,
+          reply_to: data.email,
+          message: data.message,
+          to_name: profile.name,
+          to_email: profile.email,
+          subject: `Portfolio message from ${data.name}`,
+        },
         '9-pjF8yDJMKh5GWBX',
       );
       setStatus('sent');
       reset();
     } catch {
+      setFallback(mailtoLink(getValues()));
       setStatus('failed');
     }
   };
 
   return (
-    <section className="section section--alt" id="contact">
+    <section className="section contact-section" id="contact">
       <div className="container contact">
         <div className="reveal">
-          <p className="eyebrow">Contact</p>
+          <p className="pill">Contact</p>
           <h2>Have a backend to build?</h2>
-          <p className="section-head__lead">
-            Tell me about your project, role or research. The form goes straight to my inbox.
-          </p>
+          <p className="section-head__lead">Tell me about your project, role or research.</p>
           <ul className="contact__list">
             <li>
-              <FiMail aria-hidden="true" />
+              <span className="contact__icon">
+                <FiMail aria-hidden="true" />
+              </span>
               <a href={`mailto:${profile.email}`}>{profile.email}</a>
               <button
                 type="button"
@@ -73,31 +94,34 @@ function Contact() {
               </button>
             </li>
             <li>
-              <FiPhone aria-hidden="true" />
+              <span className="contact__icon">
+                <FiPhone aria-hidden="true" />
+              </span>
               <a href={profile.phoneHref}>{profile.phone}</a>
             </li>
             <li>
-              <FiGithub aria-hidden="true" />
+              <span className="contact__icon">
+                <FiGithub aria-hidden="true" />
+              </span>
               <a href={links.github} target="_blank" rel="noreferrer">
                 github.com/studyaabhee-gif
               </a>
             </li>
             <li>
-              <FiLinkedin aria-hidden="true" />
+              <span className="contact__icon">
+                <FiLinkedin aria-hidden="true" />
+              </span>
               <a href={links.linkedin} target="_blank" rel="noreferrer">
                 LinkedIn profile
               </a>
             </li>
             <li>
-              <FiMapPin aria-hidden="true" />
+              <span className="contact__icon">
+                <FiMapPin aria-hidden="true" />
+              </span>
               {profile.location}
             </li>
           </ul>
-          <div className="btn-row">
-            <a className="btn" href={profile.cv} download>
-              <FiDownload aria-hidden="true" /> Download CV
-            </a>
-          </div>
         </div>
 
         <form className="form reveal" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -136,14 +160,14 @@ function Contact() {
             />
             {errors.message && <p role="alert">{errors.message.message}</p>}
           </div>
-          <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
+          <button type="submit" className="btn btn--primary btn--wide" disabled={isSubmitting}>
             <FiSend aria-hidden="true" /> {isSubmitting ? 'Sending...' : 'Send message'}
           </button>
           <div aria-live="polite">
             {status === 'sent' && <p className="form__status form__status--ok">Thanks, your message is on its way.</p>}
             {status === 'failed' && (
               <p className="form__status form__status--bad">
-                That didn&apos;t send. Please email me at {profile.email} instead.
+                That didn&apos;t send. <a href={fallback}>Open it in your email app</a> instead.
               </p>
             )}
           </div>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiDownload, FiMenu, FiMoon, FiSun, FiX } from 'react-icons/fi';
+import { FiDownload, FiMenu, FiX } from 'react-icons/fi';
 import { profile } from '../../data/profile';
 
 const NAV = [
@@ -11,16 +11,10 @@ const NAV = [
   { id: 'contact', label: 'Contact' },
 ];
 
-function currentTheme() {
-  const set = document.documentElement.dataset.theme;
-  if (set) return set;
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
-
 function Header() {
-  const [theme, setTheme] = useState(currentTheme);
   const [open, setOpen] = useState(false);
   const [section, setSection] = useState('');
+  const header = useRef(null);
   const progress = useRef(null);
 
   useEffect(() => {
@@ -55,6 +49,7 @@ function Header() {
       if (progress.current) {
         progress.current.style.transform = `scaleX(${max > 0 ? window.scrollY / max : 0})`;
       }
+      header.current?.classList.toggle('is-scrolled', window.scrollY > 24);
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -69,22 +64,14 @@ function Header() {
     };
   }, []);
 
-  const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
-    setTheme(next);
-    try {
-      localStorage.setItem('theme', next);
-    } catch {
-      /* the choice just won't persist */
-    }
-  };
-
   return (
-    <header className="site-header">
+    <header className="site-header" ref={header}>
       <div className="container site-header__row">
         <a className="brand" href="#top" onClick={() => setOpen(false)}>
-          abheejan<span>.go</span>
+          <span className="brand__mark" aria-hidden="true">
+            A
+          </span>
+          Abheejan
         </a>
 
         <nav id="site-nav" className={`site-nav${open ? ' is-open' : ''}`} aria-label="Main">
@@ -101,17 +88,9 @@ function Header() {
         </nav>
 
         <div className="site-header__actions">
-          <a className="btn btn--small" href={profile.cv} download>
+          <a className="btn btn--primary btn--small" href={profile.cv} download>
             <FiDownload aria-hidden="true" /> CV
           </a>
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-          >
-            {theme === 'dark' ? <FiSun /> : <FiMoon />}
-          </button>
           <button
             type="button"
             className="icon-btn menu-btn"
