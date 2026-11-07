@@ -14,13 +14,10 @@
   },
   "dependencies": {
     "emailjs-com": "^3.2.0",
-    "framer-motion": "^12.18.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",
-    "react-icons": "^5.5.0",
-    "react-intersection-observer": "^9.16.0",
-    "styled-components": "^6.1.17"
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

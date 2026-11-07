@@ -1,233 +1,82 @@
-// src/components/Header/Header.jsx
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { FaBars, FaTimes } from 'react-icons/fa';
-import { useInView } from 'react-intersection-observer';
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import { FiMenu, FiMoon, FiSun, FiX } from 'react-icons/fi';
 
-const HeaderContainer = styled.header`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  transition: all 0.3s ease;
-  background-color: ${({ scrolled }) =>
-    scrolled ? 'rgba(248, 249, 250, 0.95)' : 'transparent'};
-  box-shadow: ${({ scrolled }) => (scrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none')};
-  height: 80px;
-`;
+const NAV = [
+  { href: '#work', label: 'Work' },
+  { href: '#research', label: 'Research' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#stack', label: 'Stack' },
+  { href: '#about', label: 'About' },
+];
 
-const Nav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 80px;
-  padding: 0 20px;
-`;
-
-const Logo = styled(motion.a)`
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: ${({ scrolled }) => (scrolled ? 'green' : 'white')};
-  text-decoration: none;
-  transition: color 0.3s ease;
-
-  span {
-    color: green;
-  }
-
-  &:hover {
-    color: green;
-  }
-`;
-
-const NavLinks = styled.ul`
-  display: flex;
-  list-style: none;
-  gap: 30px;
-
-  @media (max-width: 768px) {
-    position: fixed;
-    top: 0;
-    right: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
-    width: 70%;
-    height: 100vh;
-    background-color: var(--light-color);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: right 0.5s ease;
-    z-index: 1000;
-    box-shadow: ${({ isOpen }) => (isOpen ? '-5px 0 15px rgba(0, 0, 0, 0.2)' : 'none')};
-  }
-`;
-
-const NavLink = styled(motion.li)`
-  a {
-    color: ${({ scrolled }) => (scrolled ? 'var(--dark-color)' : 'white')};
-    font-weight: 500;
-    position: relative;
-    transition: color 0.3s ease;
-
-    @media (max-width: 768px) {
-      color: var(--dark-color);
-      font-size: 1.2rem;
-      padding: 10px 0;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-      transition: width 0.3s ease;
-    }
-
-    &:hover::after {
-      width: 100%;
-    }
-  }
-`;
-
-const MobileMenuButton = styled.div`
-  display: none;
-  z-index: 1001;
-  cursor: pointer;
-  position: relative;
-
-  @media (max-width: 768px) {
-    display: block;
-  }
-
-  svg {
-    color: ${({ scrolled, isOpen }) => 
-      isOpen ? 'var(--dark-color)' : 
-      scrolled ? 'var(--dark-color)' : 'white'};
-    font-size: 1.5rem;
-    transition: color 0.3s ease;
-  }
-`;
-
-const CloseButton = styled(FaTimes)`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  color: var(--dark-color) !important;
-  font-size: 1.8rem !important;
-  z-index: 1002;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  padding: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-`;
-
-const Overlay = styled.div`
-  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-`;
+function currentTheme() {
+  const set = document.documentElement.dataset.theme;
+  if (set) return set;
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
 
 function Header() {
-  const [scrolled, setScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [ref, inView] = useInView({ threshold: 0.1 });
-  const menuRef = useRef();
+  const [theme, setTheme] = useState(currentTheme);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onKey = (event) => event.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+  const toggleTheme = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    setTheme(next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* the choice just won't persist */
     }
-
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
   };
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   return (
-    <HeaderContainer scrolled={scrolled} ref={ref}>
-      <div className="container">
-        <Nav>
-          <Logo
-            href="#home"
-            scrolled={scrolled}
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Portfolio<span>.</span>
-          </Logo>
+    <header className="site-header">
+      <div className="container site-header__row">
+        <a className="brand" href="#top" onClick={() => setOpen(false)}>
+          abheejan<span>.go</span>
+        </a>
 
-          <NavLinks isOpen={isOpen} ref={menuRef}>
-            {isOpen && (
-              <CloseButton onClick={toggleMenu} />
-            )}
-            {navLinks.map((link, index) => (
-              <NavLink
-                key={index}
-                scrolled={scrolled}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onClick={() => setIsOpen(false)}
-              >
-                <a href={link.href}>{link.name}</a>
-              </NavLink>
-            ))}
-          </NavLinks>
+        <nav id="site-nav" className={`site-nav${open ? ' is-open' : ''}`} aria-label="Main">
+          {NAV.map((item) => (
+            <a key={item.href} href={item.href} onClick={() => setOpen(false)}>
+              {item.label}
+            </a>
+          ))}
+          <a className="site-nav__cta" href="#contact" onClick={() => setOpen(false)}>
+            Contact
+          </a>
+        </nav>
 
-          <MobileMenuButton
-            scrolled={scrolled}
-            isOpen={isOpen}
-            onClick={toggleMenu}
-            aria-label="Toggle navigation menu"
+        <div className="site-header__actions">
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
           >
-            {isOpen ? null : <FaBars />}
-          </MobileMenuButton>
-        </Nav>
+            {theme === 'dark' ? <FiSun /> : <FiMoon />}
+          </button>
+          <button
+            type="button"
+            className="icon-btn menu-btn"
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
+            aria-controls="site-nav"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+          >
+            {open ? <FiX /> : <FiMenu />}
+          </button>
+        </div>
       </div>
-      <Overlay isOpen={isOpen} onClick={() => setIsOpen(false)} />
-    </HeaderContainer>
+    </header>
   );
 }
+
 export default Header;

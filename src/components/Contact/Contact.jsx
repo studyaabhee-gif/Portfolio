@@ -1,243 +1,117 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import emailjs from 'emailjs-com';
-import { motion } from 'framer-motion';
-import { FiSend, FiMapPin, FiPhone, FiMail } from 'react-icons/fi';
-import styled from 'styled-components';
-import { useRef } from 'react';
-
-// Styled Components
-const ContactSection = styled.section`
-  padding: 100px 0;
-  background: linear-gradient(135deg, #f0f4f8, #e0e7ff);  
-  background-size: 400% 400%;
-  animation: gradientBG 10s ease infinite;
-
-  @keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-`;
-
-const ContactContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 50px;
-  margin-top: 50px;
-`;
-
-const ContactInfo = styled.div`
-  h3 {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-  }
-`;
-
-const ContactForm = styled.form`
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  
-  h3 {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-  }
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 20px;
-
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-  }
-
-  input, textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: inherit;
-  }
-
-  span {
-    color: #dc3545;
-    font-size: 0.8rem;
-  }
-`;
-
-const SubmitButton = styled(motion.button)`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 30px;
-  background: linear-gradient(to right, #3a86ff, #8338ec);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-`;
-
-const ContactItem = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-
-  svg {
-    font-size: 1.5rem;
-    color: #3a86ff;
-  }
-
-  h4 {
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-  }
-
-  p {
-    color: #6c757d;
-  }
-`;
+import { FiGithub, FiLinkedin, FiMail, FiMapPin, FiSend } from 'react-icons/fi';
+import { links, profile } from '../../data/profile';
 
 function Contact() {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const form = useRef();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm();
+  const [status, setStatus] = useState(null);
 
-  const onSubmit = (data) => {
-    const templateParams = {
-      ...data,
-      to_email: 'abheejanlal@gmail.com'
-    };
-
-    emailjs.send(
-      'service_m6r29e8',
-      'template_qovcriv',
-      templateParams,
-      '9-pjF8yDJMKh5GWBX'
-    )
-    .then((response) => {
-      console.log('SUCCESS!', response.status, response.text);
-      alert('Message sent successfully!');
+  const onSubmit = async (data) => {
+    setStatus(null);
+    try {
+      await emailjs.send(
+        'service_m6r29e8',
+        'template_qovcriv',
+        { ...data, to_email: profile.email },
+        '9-pjF8yDJMKh5GWBX',
+      );
+      setStatus('sent');
       reset();
-    })
-    .catch((error) => {
-      console.error('FAILED...', error);
-      alert('Failed to send the message. Please try again later.');
-    });
+    } catch {
+      setStatus('failed');
+    }
   };
 
   return (
-    <ContactSection id="contact">
-      <div className="container">
-        <motion.h2
-          className="section-title"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-        >
-          Get In Touch
-        </motion.h2>
+    <section className="section section--alt" id="contact">
+      <div className="container contact">
+        <div className="reveal">
+          <p className="eyebrow">Contact</p>
+          <h2>Have a backend to build?</h2>
+          <p className="section-head__lead">
+            Tell me about your project, role or research. The form goes straight to my inbox.
+          </p>
+          <ul className="contact__list">
+            <li>
+              <FiMail aria-hidden="true" />
+              <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            </li>
+            <li>
+              <FiGithub aria-hidden="true" />
+              <a href={links.github} target="_blank" rel="noreferrer">
+                github.com/studyaabhee-gif
+              </a>
+            </li>
+            <li>
+              <FiLinkedin aria-hidden="true" />
+              <a href={links.linkedin} target="_blank" rel="noreferrer">
+                LinkedIn profile
+              </a>
+            </li>
+            <li>
+              <FiMapPin aria-hidden="true" />
+              {profile.location}
+            </li>
+          </ul>
+        </div>
 
-        <ContactContainer>
-          <ContactForm
-            onSubmit={handleSubmit(onSubmit)}
-            ref={form}
-            as={motion.form}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            <h3>Send a Message</h3>
-            <FormGroup>
-              <label htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                {...register("name", { required: "Name is required" })}
-              />
-              {errors.name && <span>{errors.name.message}</span>}
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                    message: "Invalid email address"
-                  }
-                })}
-              />
-              {errors.email && <span>{errors.email.message}</span>}
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor="message">Message</label>
-              <textarea
-                id="message"
-                rows="5"
-                {...register("message", { required: "Message is required" })}
-              ></textarea>
-              {errors.message && <span>{errors.message.message}</span>}
-            </FormGroup>
-            <SubmitButton
-              type="submit"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FiSend />
-              Send Message
-            </SubmitButton>
-          </ContactForm>
-
-          <ContactInfo>
-            <motion.h3
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            >
-              Contact Information
-            </motion.h3>
-            <ContactItem
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <FiMapPin />
-              <div>
-                <h4>Address</h4>
-                <p>Sanepa, Lalitpur, Nepal</p>
-              </div>
-            </ContactItem>
-            <ContactItem
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <FiPhone />
-              <div>
-                <h4>Phone</h4>
-                <p>+977-9818950958</p>
-              </div>
-            </ContactItem>
-            <ContactItem
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            >
-              <FiMail />
-              <div>
-                <h4>Email</h4>
-                <p>abheejanlal@gmail.com</p>
-              </div>
-            </ContactItem>
-          </ContactInfo>
-        </ContactContainer>
+        <form className="form reveal" onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className="field">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              autoComplete="name"
+              aria-invalid={errors.name ? 'true' : 'false'}
+              {...register('name', { required: 'Please enter your name.' })}
+            />
+            {errors.name && <p role="alert">{errors.name.message}</p>}
+          </div>
+          <div className="field">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              autoComplete="email"
+              aria-invalid={errors.email ? 'true' : 'false'}
+              {...register('email', {
+                required: 'Please enter your email.',
+                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'That email address looks incomplete.' },
+              })}
+            />
+            {errors.email && <p role="alert">{errors.email.message}</p>}
+          </div>
+          <div className="field">
+            <label htmlFor="message">Message</label>
+            <textarea
+              id="message"
+              rows="5"
+              aria-invalid={errors.message ? 'true' : 'false'}
+              {...register('message', { required: 'Please add a message.' })}
+            />
+            {errors.message && <p role="alert">{errors.message.message}</p>}
+          </div>
+          <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
+            <FiSend aria-hidden="true" /> {isSubmitting ? 'Sending...' : 'Send message'}
+          </button>
+          <div aria-live="polite">
+            {status === 'sent' && <p className="form__status form__status--ok">Thanks, your message is on its way.</p>}
+            {status === 'failed' && (
+              <p className="form__status form__status--bad">
+                That didn&apos;t send. Please email me at {profile.email} instead.
+              </p>
+            )}
+          </div>
+        </form>
       </div>
-    </ContactSection>
+    </section>
   );
 }
 

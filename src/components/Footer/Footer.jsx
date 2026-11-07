@@ -1,125 +1,31 @@
+import { FiFacebook, FiGithub, FiInstagram, FiLinkedin } from 'react-icons/fi';
+import { links, profile } from '../../data/profile';
 
-// src/components/Footer/Footer.jsx
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
-import { FaGithub, FaLinkedin, FaInstagram, FaFacebook } from 'react-icons/fa';
-
-const FooterContainer = styled.footer`
-  background-color: var(--dark-color);
-  color: white;
-  padding: 50px 0 20px;
-  text-align: center;
-`;
-
-const FooterContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const SocialLinks = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
-
-  a {
-    color: white;
-    font-size: 1.5rem;
-    transition: all 0.3s ease;
-
-    &:hover {
-      color: var(--primary-color);
-      transform: translateY(-3px);
-    }
-  }
-`;
-
-const FooterLinks = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
-  flex-wrap: wrap;
-  justify-content: center;
-
-  a {
-    color: rgba(255, 255, 255, 0.7);
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: white;
-    }
-  }
-`;
-
-const Copyright = styled.p`
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.9rem;
-`;
+const SOCIALS = [
+  { href: links.github, label: 'GitHub', icon: <FiGithub aria-hidden="true" /> },
+  { href: links.linkedin, label: 'LinkedIn', icon: <FiLinkedin aria-hidden="true" /> },
+  { href: links.instagram, label: 'Instagram', icon: <FiInstagram aria-hidden="true" /> },
+  { href: links.facebook, label: 'Facebook', icon: <FiFacebook aria-hidden="true" /> },
+];
 
 function Footer() {
-  const links = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' },
-  ];
-
   return (
-    <FooterContainer>
-      <div className="container">
-        <FooterContent>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <SocialLinks>
-              <a href="https://github.com/abheejan" target="_blank" rel="noreferrer">
-                <FaGithub />
+    <footer className="site-footer">
+      <div className="container site-footer__row">
+        <p>
+          &copy; {new Date().getFullYear()} {profile.name}
+        </p>
+        <ul>
+          {SOCIALS.map(({ href, label, icon }) => (
+            <li key={label}>
+              <a className="icon-btn" href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                {icon}
               </a>
-              <a href="https://www.linkedin.com/in/abheejan-lal-shrestha-5b9919313/" target="_blank" rel="noreferrer">
-                <FaLinkedin />
-              </a>
-              
-              <a href="https://www.facebook.com/abheejan.shrestha" target="_blank" rel="noreferrer">
-                <FaFacebook />
-              </a>
-              <a href="https://www.instagram.com/abheejan/" target="_blank" rel="noreferrer">
-                <FaInstagram />
-              </a>
-            </SocialLinks>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
-            <FooterLinks>
-              {links.map((link, index) => (
-                <a key={index} href={link.href}>
-                  {link.name}
-                </a>
-              ))}
-            </FooterLinks>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
-            <Copyright>
-              &copy; {new Date().getFullYear()} Abheejan Lal Shrestha. All rights reserved.
-            </Copyright>
-          </motion.div>
-        </FooterContent>
+            </li>
+          ))}
+        </ul>
       </div>
-    </FooterContainer>
+    </footer>
   );
 }
 

@@ -2,13 +2,90 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="portfoliologo.png" />
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio</title>
+    <title>Abheejan Lal Shrestha | Backend Developer (Go, MongoDB, Flutter)</title>
+    <meta
+      name="description"
+      content="Abheejan Lal Shrestha is a backend developer in Nepal building Go and MongoDB backends for Flutter apps, and first author of the RoomieKtm rental marketplace research paper."
+    />
+    <meta name="author" content="Abheejan Lal Shrestha" />
+    <link rel="canonical" href="https://abheejanlalshrestha.com.np/" />
+    <link rel="icon" type="image/png" href="/portfoliologo.png" />
+    <meta name="theme-color" content="#0d1311" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Abheejan Lal Shrestha | Backend Developer" />
+    <meta
+      property="og:description"
+      content="Go and MongoDB backends for Flutter apps. Developer of RoomieKTM and first author of its research paper."
+    />
+    <meta property="og:url" content="https://abheejanlalshrestha.com.np/" />
+    <meta property="og:image" content="https://abheejanlalshrestha.com.np/img/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    />
+
+    <script>
+      // Apply the saved theme before first paint so the page never flashes.
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch (e) {
+        /* storage unavailable: fall back to the system preference */
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://abheejanlalshrestha.com.np/#me",
+            "name": "Abheejan Lal Shrestha",
+            "url": "https://abheejanlalshrestha.com.np/",
+            "jobTitle": "Backend Developer",
+            "image": "https://abheejanlalshrestha.com.np/img/portrait.jpg",
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "Nepal College of Information Technology" },
+            "address": { "@type": "PostalAddress", "addressLocality": "Lalitpur", "addressCountry": "NP" },
+            "knowsAbout": ["Go", "MongoDB", "Flutter", "Dart", "REST APIs", "Information retrieval"],
+            "sameAs": [
+              "https://github.com/studyaabhee-gif",
+              "https://www.linkedin.com/in/abheejan-lal-shrestha-5b9919313/"
+            ]
+          },
+          {
+            "@type": "ScholarlyArticle",
+            "headline": "AI-Driven Conversational Rental Marketplace with Fuzzy Hybrid Search and Trust-Based Moderation",
+            "datePublished": "2026-10-02",
+            "url": "https://doi.org/10.65091/icicset.v3i1.97",
+            "author": [
+              { "@id": "https://abheejanlalshrestha.com.np/#me" },
+              { "@type": "Person", "name": "Pratik Mishra" },
+              { "@type": "Person", "name": "Swastik Shrestha" },
+              { "@type": "Person", "name": "Amit K. Shrivastava" }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>Abheejan Lal Shrestha</h1>
+      <p>
+        Backend developer in Lalitpur, Nepal, building Go and MongoDB backends for Flutter apps.
+        Contact: <a href="mailto:abheejanlal@gmail.com">abheejanlal@gmail.com</a>
+      </p>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-</html> 
+</html>
