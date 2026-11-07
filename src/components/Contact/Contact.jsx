@@ -1,7 +1,17 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import emailjs from 'emailjs-com';
-import { FiGithub, FiLinkedin, FiMail, FiMapPin, FiSend } from 'react-icons/fi';
+import {
+  FiCheck,
+  FiCopy,
+  FiDownload,
+  FiGithub,
+  FiLinkedin,
+  FiMail,
+  FiMapPin,
+  FiPhone,
+  FiSend,
+} from 'react-icons/fi';
 import { links, profile } from '../../data/profile';
 
 function Contact() {
@@ -12,6 +22,17 @@ function Contact() {
     formState: { errors, isSubmitting },
   } = useForm();
   const [status, setStatus] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     setStatus(null);
@@ -42,6 +63,18 @@ function Contact() {
             <li>
               <FiMail aria-hidden="true" />
               <a href={`mailto:${profile.email}`}>{profile.email}</a>
+              <button
+                type="button"
+                className="copy-btn"
+                onClick={copyEmail}
+                aria-label={copied ? 'Email copied' : 'Copy email address'}
+              >
+                {copied ? <FiCheck aria-hidden="true" /> : <FiCopy aria-hidden="true" />}
+              </button>
+            </li>
+            <li>
+              <FiPhone aria-hidden="true" />
+              <a href={profile.phoneHref}>{profile.phone}</a>
             </li>
             <li>
               <FiGithub aria-hidden="true" />
@@ -60,6 +93,11 @@ function Contact() {
               {profile.location}
             </li>
           </ul>
+          <div className="btn-row">
+            <a className="btn" href={profile.cv} download>
+              <FiDownload aria-hidden="true" /> Download CV
+            </a>
+          </div>
         </div>
 
         <form className="form reveal" onSubmit={handleSubmit(onSubmit)} noValidate>

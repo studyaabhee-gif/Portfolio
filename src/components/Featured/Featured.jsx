@@ -1,5 +1,54 @@
-import { FiCheck } from 'react-icons/fi';
-import { roomie } from '../../data/profile';
+import { useState } from 'react';
+import { FiCheck, FiGithub } from 'react-icons/fi';
+import { revah, roomie } from '../../data/profile';
+import Arch from './Arch';
+
+function Checks({ items }) {
+  return (
+    <ul className="checks">
+      {items.map((item) => (
+        <li key={item}>
+          <FiCheck aria-hidden="true" />
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Tags({ items }) {
+  return (
+    <ul className="tags" aria-label="Technologies">
+      {items.map((tag) => (
+        <li key={tag}>{tag}</li>
+      ))}
+    </ul>
+  );
+}
+
+function Pipeline() {
+  const [active, setActive] = useState(1);
+
+  return (
+    <div className="reveal">
+      <h4 className="sub-head">How a search runs: select a step</h4>
+      <ol className="pipeline">
+        {roomie.pipeline.map((step, index) => (
+          <li key={step.label}>
+            <button type="button" aria-pressed={index === active} onClick={() => setActive(index)}>
+              <span className="pipeline__n">{String(index + 1).padStart(2, '0')}</span>
+              <strong>{step.label}</strong>
+              <span>{step.detail}</span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <p className="pipeline__explain" aria-live="polite">
+        {roomie.pipeline[active].explain}
+      </p>
+    </div>
+  );
+}
 
 function Featured() {
   return (
@@ -7,58 +56,59 @@ function Featured() {
       <div className="container">
         <header className="section-head reveal">
           <p className="eyebrow">Featured work</p>
-          <h2>{roomie.name}</h2>
-          <p className="section-head__lead">{roomie.tagline}</p>
+          <h2>Systems I&apos;ve built</h2>
         </header>
 
-        <div className="case reveal">
-          <div>
-            <h3>The problem</h3>
-            <p>{roomie.problem}</p>
-            <ul className="tags" aria-label="Technologies">
-              {roomie.stack.map((tag) => (
-                <li key={tag}>{tag}</li>
-              ))}
-            </ul>
+        <article className="study">
+          <div className="study__grid reveal">
+            <div>
+              <h3 className="study__title">{roomie.name}</h3>
+              <p className="study__lead">{roomie.tagline}</p>
+              <p className="study__text">{roomie.problem}</p>
+              <Tags items={roomie.stack} />
+              <p className="study__links">
+                <a href={roomie.code} target="_blank" rel="noreferrer">
+                  <FiGithub aria-hidden="true" /> Source code
+                </a>
+                <a href="#research">Read the research</a>
+              </p>
+            </div>
+            <Arch arch={roomie.arch} />
           </div>
-          <div>
-            <h3>What&apos;s in the system</h3>
-            <ul className="checks">
-              {roomie.built.map((item) => (
-                <li key={item}>
-                  <FiCheck aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+
+          <div className="reveal">
+            <h4 className="sub-head">What&apos;s in the system</h4>
+            <Checks items={roomie.built} />
           </div>
-        </div>
 
-        <div className="reveal">
-          <h3 className="sub-head">How a search runs</h3>
-          <ol className="pipeline">
-            {roomie.pipeline.map((step, index) => (
-              <li key={step.label}>
-                <span className="pipeline__n">{String(index + 1).padStart(2, '0')}</span>
-                <strong>{step.label}</strong>
-                <span>{step.detail}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+          <Pipeline />
 
-        <div className="reveal">
-          <h3 className="sub-head">Pilot results</h3>
-          <dl className="stats">
-            {roomie.results.map((result) => (
-              <div key={result.value}>
-                <dt>{result.label}</dt>
-                <dd>{result.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="note">{roomie.caveat}</p>
-        </div>
+          <div className="reveal">
+            <h4 className="sub-head">Pilot results</h4>
+            <dl className="stats">
+              {roomie.results.map((result) => (
+                <div key={result.value}>
+                  <dt>{result.label}</dt>
+                  <dd>{result.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="note">{roomie.caveat}</p>
+          </div>
+        </article>
+
+        <article className="study study--next">
+          <div className="study__grid reveal">
+            <div>
+              <h3 className="study__title">{revah.name}</h3>
+              <p className="study__lead">{revah.tagline}</p>
+              <Tags items={revah.stack} />
+              <h4 className="sub-head">What&apos;s in the system</h4>
+              <Checks items={revah.built} />
+            </div>
+            <Arch arch={revah.arch} />
+          </div>
+        </article>
       </div>
     </section>
   );
